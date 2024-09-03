@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation,setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.1.102:8080/auth/login', {
+      const response = await fetch('http://192.168.1.100:8080/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,6 +23,7 @@ const Login = ({ navigation }) => {
       if (response.ok) {
         // Login successful
         Alert.alert("Login Successful", "You are now logged in.");
+        setIsLoggedIn(true); // Set to true after successful login
         navigation.replace('Home'); 
         // Navigate to the home screen or dashboard
         navigation.navigate('HomeScreen', { user: json.user });

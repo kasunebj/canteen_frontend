@@ -102,7 +102,7 @@ useEffect(() => {
   const fetchData = async () => {
       try {
           console.log("inside");
-          const response = await fetch('http://192.168.1.102:8080/items');
+          const response = await fetch('http://192.168.1.100:8080/items');
 
           if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
