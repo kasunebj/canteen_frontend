@@ -13,6 +13,10 @@ import AboutUs from './pages/AboutUs';
 import ProfileEdit from './pages/ProfileEdit';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
+import Cart from './pages/Cart';
+import { Provider } from 'react-redux';
+import { store } from './pages/Store';
+import CartScreen from './pages/CartScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -66,6 +70,7 @@ const StackNavigator = ({ setIsLoggedIn }) => {
         component={AboutUs}
         options={{ title: 'About Us' }}
       />
+       
     </Stack.Navigator>
   );
 };
@@ -108,6 +113,11 @@ const LoggedInStackNavigator = ({ setIsLoggedIn }) => {
         component={AboutUs}
         options={{ title: 'About Us' }}
       />
+       <Stack.Screen
+        name="CartScreen"
+        component={CartScreen}
+        options={{ title: 'Cart Screen' }}
+      />
     </Stack.Navigator>
   );
 };
@@ -117,6 +127,8 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
+    <Provider store={store}>
+
     <NavigationContainer>
       {isLoggedIn ? (
         <Drawer.Navigator initialRouteName="Home">
@@ -136,6 +148,7 @@ const App = () => {
         <StackNavigator setIsLoggedIn={setIsLoggedIn} />
       )}
     </NavigationContainer>
+    </Provider>
   );
 };
 

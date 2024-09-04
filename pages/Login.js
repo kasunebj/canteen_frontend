@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
 const Login = ({ navigation,setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
@@ -53,7 +53,10 @@ const Login = ({ navigation,setIsLoggedIn }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Login" onPress={handleLogin} />
+      {/* <Button style={styles.button} title="Login" onPress={handleLogin} /> */}
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -68,6 +71,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16,
     textAlign: 'center',
+  },
+  button: {
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: '#ff8033',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#FFF',
+    fontWeight: 'bold',
   },
   input: {
     height: 40,
