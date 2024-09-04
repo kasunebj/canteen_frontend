@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6ad4f22-3064-4b13-a0bc-c89be472c399" name="Changes" comment="Completed with basic add to cart">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/CartScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/CartScreen.js" afterDir="false" />
-    </list>
+    <list default="true" id="f6ad4f22-3064-4b13-a0bc-c89be472c399" name="Changes" comment="add remove button added" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,7 +60,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725421876902</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="add remove button added">
+      <option name="closed" value="true" />
+      <created>1725458501832</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1725458501832</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -82,6 +84,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Completed with basic add to cart" />
-    <option name="LAST_COMMIT_MESSAGE" value="Completed with basic add to cart" />
+    <MESSAGE value="add remove button added" />
+    <option name="LAST_COMMIT_MESSAGE" value="add remove button added" />
   </component>
 </project>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, addItem, clearCart } from './CartSlice';
+import { removeItem, addItem, deleteItem, clearCart } from './CartSlice';
 import Icon from 'react-native-vector-icons/Ionicons'; // Or any other icon set
 
 export default function CartScreen() {
@@ -9,7 +9,7 @@ export default function CartScreen() {
   const dispatch = useDispatch();
 
   const handleRemoveItem = (id) => {
-    dispatch(removeItem(id));
+    dispatch(deleteItem(id));
   };
 
   const handleIncreaseQuantity = (item) => {
