@@ -41,7 +41,7 @@ export default function CartScreen() {
     };
 
     try {
-      const response = await fetch('https://your-backend-api.com/orders', {
+      const response = await fetch('http://192.168.1.100:8080/api/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
