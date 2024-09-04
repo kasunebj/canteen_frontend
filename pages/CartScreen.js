@@ -3,10 +3,13 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Button } from 'reac
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, addItem, deleteItem, clearCart } from './CartSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+// import Toast from 'react-native-toast-message';
 
 export default function CartScreen() {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const handleRemoveItem = (id) => {
     dispatch(deleteItem(id));
@@ -50,6 +53,11 @@ export default function CartScreen() {
         // Order successfully placed
         console.log('Order placed successfully');
         handleClearCart();
+        // Toast.show({
+        //   type: 'success',
+        //   text1: 'Order submitted successfully!',
+        // });
+        navigation.navigate('Home', { orderSubmitted: true }); // Redirect to Home screen
       } else {
         console.error('Failed to place order');
       }
@@ -94,6 +102,7 @@ export default function CartScreen() {
       ) : (
         <Text>Your cart is empty</Text>
       )}
+      {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
     </View>
   );
 }
