@@ -1,5 +1,7 @@
 import React, { useState,useEffect  } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Modal,Button } from 'react-native';
+import { addItem } from './CartSlice';
+import { useDispatch } from 'react-redux';
 
 const foodItems = [
   {
@@ -80,6 +82,13 @@ const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [itemList, setItemList] = useState(false);
 
+  const dispatch = useDispatch();
+
+  const handleAddToCart = (item) => {
+    alert(item);
+    dispatch(addItem(item));
+  };
+
 //   useEffect(() => {
 //     // Call to backend API
 //     const fetchData = async () => {
@@ -134,6 +143,7 @@ useEffect(() => {
       <Image source={item.image} style={styles.foodImage} />
       <Text style={styles.foodName}>{item.name}</Text>
       <Text style={styles.foodPrice}>{item.price}</Text>
+      <Button title="Add to Cart" onPress={() => handleAddToCart(item)} />
     </TouchableOpacity>
   );
 
@@ -141,6 +151,12 @@ useEffect(() => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.welcomeText}>Welcome</Text>
+        <TouchableOpacity
+          style={styles.profileButton}
+          onPress={() => navigation.navigate('CartScreen')}
+        >
+          <Text style={styles.profileButtonText}>Cart</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.profileButton}
           onPress={() => navigation.navigate('Profile')}
