@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, addItem, deleteItem, clearCart } from './CartSlice';
-import Icon from 'react-native-vector-icons/Ionicons'; // Or any other icon set
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function CartScreen() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -22,6 +22,40 @@ export default function CartScreen() {
 
   const handleClearCart = () => {
     dispatch(clearCart());
+  };
+
+  const calculateTotalPrice = () => {
+    return cartItems.reduce((total, item) => total + item.quantity * item.price, 0);
+  };
+
+  const handleAddOrder = async () => {
+    const orderRequest = {
+      items: cartItems.map(item => ({
+        itemId: item.id,
+        quantity: item.quantity
+      })),
+      totalPrice: calculateTotalPrice()
+    };
+
+    try {
+      const response = await fetch('https://your-backend-api.com/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderRequest)
+      });
+
+      if (response.ok) {
+        // Order successfully placed
+        console.log('Order placed successfully');
+        handleClearCart();
+      } else {
+        console.error('Failed to place order');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const renderItem = ({ item }) => (
@@ -45,17 +79,21 @@ export default function CartScreen() {
   return (
     <View style={styles.container}>
       {cartItems.length > 0 ? (
-        <FlatList
-          data={cartItems}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-        />
+        <>
+          <FlatList
+            data={cartItems}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+          />
+          <Text>Total Price: ${calculateTotalPrice().toFixed(2)}</Text>
+          <View style={styles.buttonContainer}>
+            <Button title="Add Order" onPress={handleAddOrder} />
+            <Button title="Clear Cart" onPress={handleClearCart} color="#ff0000" />
+          </View>
+        </>
       ) : (
         <Text>Your cart is empty</Text>
       )}
-      <TouchableOpacity onPress={handleClearCart} style={styles.clearCartButton}>
-        <Text>Clear Cart</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -82,10 +120,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     fontSize: 18,
   },
-  clearCartButton: {
+  buttonContainer: {
     marginTop: 20,
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#ccc',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
