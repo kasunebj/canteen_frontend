@@ -1,5 +1,9 @@
-import React, { useState,useEffect  } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Modal, Button } from 'react-native';
+import { addItem } from './CartSlice';
+import { useDispatch } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 const foodItems = [
   {
@@ -75,53 +79,42 @@ const foodItems = [
   // Add other food items similarly
 ];
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [selectedFood, setSelectedFood] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [itemList, setItemList] = useState(false);
+  const dispatch = useDispatch();
 
-//   useEffect(() => {
-//     // Call to backend API
-//     const fetchData = async () => {
-//         try {
-//             console.log("inside")
-//             const response = await fetch('http://localhost:8080/items');
-//             const json = response.json();
-//             setitemList(json);
-//         } catch (error) {
-//             console.error("Error fetching data: ", error);
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     fetchData();
-// }, []);
-
-useEffect(() => {
-  const fetchData = async () => {
-      try {
-          console.log("inside");
-          const response = await fetch('http://192.168.1.102:8080/items');
-
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const json = await response.json();
-          console.log(json)
-          setItemList(json);
-      } catch (error) {
-          console.error("Error fetching data: ", error);
-      // } finally {
-      //     setLoading(false);
-      // }
-      }
+  const handleAddToCart = (item) => {
+    dispatch(addItem(item));
   };
 
-  fetchData();
-}, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://192.168.1.100:8080/items');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const json = await response.json();
+        setItemList(json);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchData();
+  }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (route.params?.orderSubmitted) {
+        Toast.show({
+          type: 'success',
+          text1: 'Order submitted successfully!',
+        });
+      }
+    }, [route.params?.orderSubmitted])
+  );
 
   const renderFoodItem = ({ item }) => (
     <TouchableOpacity
@@ -134,6 +127,7 @@ useEffect(() => {
       <Image source={item.image} style={styles.foodImage} />
       <Text style={styles.foodName}>{item.name}</Text>
       <Text style={styles.foodPrice}>{item.price}</Text>
+      <Button title="Add to Cart" onPress={() => handleAddToCart(item)} />
     </TouchableOpacity>
   );
 
@@ -141,6 +135,12 @@ useEffect(() => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.welcomeText}>Welcome</Text>
+        <TouchableOpacity
+          style={styles.profileButton}
+          onPress={() => navigation.navigate('CartScreen')}
+        >
+          <Text style={styles.profileButtonText}>Cart</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.profileButton}
           onPress={() => navigation.navigate('Profile')}
@@ -204,6 +204,7 @@ useEffect(() => {
           </View>
         </View>
       </Modal>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </View>
   );
 };
