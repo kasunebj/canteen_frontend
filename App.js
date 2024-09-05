@@ -17,6 +17,7 @@ import Cart from './pages/Cart';
 import { Provider } from 'react-redux';
 import { store } from './pages/Store';
 import CartScreen from './pages/CartScreen';
+import HistoryScreen from './pages/History';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -123,6 +124,11 @@ const LoggedInStackNavigator = ({ setIsLoggedIn }) => {
         component={(props) => <Login {...props} setIsLoggedIn={setIsLoggedIn} />}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+          name="History"  // Ensure name matches the navigation call
+          component={HistoryScreen}
+          options={{ title: 'History' }}
+        />
     </Stack.Navigator>
   );
 };
@@ -139,7 +145,7 @@ const App = () => {
         <Drawer.Navigator initialRouteName="Home">
           <Drawer.Screen name="Home" component={LoggedInStackNavigator} />
           <Drawer.Screen name="Profile" component={Profile} />
-          <Drawer.Screen name="History" component={DashboardScreen} />
+          <Drawer.Screen name="History" component={HistoryScreen} />
           <Drawer.Screen
             name="Logout"
             component={() => {
