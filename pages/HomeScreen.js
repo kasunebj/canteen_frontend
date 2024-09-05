@@ -4,6 +4,7 @@ import { addItem } from './CartSlice';
 import { useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const foodItems = [
   {
@@ -92,10 +93,13 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.1.100:8080/items');
+        const response = await fetch('http://192.168.1.101:8080/items');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const id = await AsyncStorage.getItem('userId');
+
+        alert(id);
         const json = await response.json();
         setItemList(json);
       } catch (error) {

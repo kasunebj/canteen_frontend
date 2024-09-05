@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
+import { saveLoginData, getLoginData, clearLoginData } from './AuthUtils'; // Import from the correct path
 
 const Login = ({ navigation,setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
@@ -7,7 +8,7 @@ const Login = ({ navigation,setIsLoggedIn }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.1.100:8080/auth/login', {
+      const response = await fetch('http://192.168.1.101:8080/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,8 +23,13 @@ const Login = ({ navigation,setIsLoggedIn }) => {
 
       if (response.ok) {
         // Login successful
-        Alert.alert("Login Successful", "You are now logged in.");
         setIsLoggedIn(true); // Set to true after successful login
+
+        const userId = json.userId; // Example user ID from server after successful login
+        const userType= json.userType;
+        await clearLoginData();
+        await saveLoginData(userId,userType);
+
         navigation.replace('Home'); 
         // Navigate to the home screen or dashboard
         navigation.navigate('HomeScreen', { user: json.user });

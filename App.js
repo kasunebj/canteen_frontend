@@ -118,6 +118,11 @@ const LoggedInStackNavigator = ({ setIsLoggedIn }) => {
         component={CartScreen}
         options={{ title: 'Cart Screen' }}
       />
+       <Stack.Screen
+        name="Login"
+        component={(props) => <Login {...props} setIsLoggedIn={setIsLoggedIn} />}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
