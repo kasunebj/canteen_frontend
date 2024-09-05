@@ -93,7 +93,7 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.1.101:8080/items');
+        const response = await fetch('http://192.168.1.100:8080/items');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

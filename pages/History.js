@@ -1,53 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-
-const historyItems = [
-  {
-    id: '1',
-    name: 'Food Item 1',
-    price: '$9.99',
-    date: '2024-08-10',
-  },
-  {
-    id: '2',
-    name: 'Food Item 2',
-    price: '$12.99',
-    date: '2024-08-12',
-  },
-  {
-    id: '3',
-    name: 'Food Item 3',
-    price: '$8.99',
-    date: '2024-08-14',
-  },
-  // Add more history items here
-];
+import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HistoryScreen = () => {
   const [historyData, setHistoryData] = useState([]);
-
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    // Fetch or load the history data
-    setHistoryData(historyItems);
+    const fetchHistory = async () => {
+      try {
+        // Retrieve the user ID from AsyncStorage
+        const userId = await AsyncStorage.getItem('userId');
+
+        if (!userId) {
+          Alert.alert('Error', 'User not logged in.');
+          return;
+        }
+
+        // Make the API request to fetch the completed orders
+        const response = await fetch('http://192.168.1.100:8080/api/products/completed', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'userId': userId, // Pass userId in the request header
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setHistoryData(data); // Update state with the fetched data
+        } else {
+          Alert.alert('Error', 'Failed to fetch order history');
+        }
+      } catch (error) {
+        console.error('Error fetching history:', error);
+        Alert.alert('Error', 'Unable to connect to the server.');
+      } finally {
+        setLoading(false); // Stop loading once the request is complete
+      }
+    };
+
+    fetchHistory();
   }, []);
 
   const renderHistoryItem = ({ item }) => (
     <View style={styles.historyItem}>
-      <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemPrice}>{item.price}</Text>
-      <Text style={styles.itemDate}>{item.date}</Text>
+      <Text style={styles.itemName}>Order ID: {item.id}</Text>
+      <Text style={styles.itemPrice}>Total: ${item.totalPrice}</Text>
+      <Text style={styles.itemDate}>Date: {new Date(item.createdAt).toLocaleDateString()}</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Purchase History</Text>
-      <FlatList
-        data={historyData}
-        renderItem={renderHistoryItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.historyContainer}
-      />
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <FlatList
+          data={historyData}
+          renderItem={renderHistoryItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.historyContainer}
+        />
+      )}
     </View>
   );
 };

@@ -8,7 +8,7 @@ const Login = ({ navigation,setIsLoggedIn }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.1.101:8080/auth/login', {
+      const response = await fetch('http://192.168.1.100:8080/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
