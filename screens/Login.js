@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
-import { saveLoginData, getLoginData, clearLoginData } from './AuthUtils'; // Import from the correct path
+import { saveLoginData, getLoginData, clearLoginData } from '../asyncStorage/AuthUtils'; // Import from the correct path
 
 const Login = ({ navigation,setIsLoggedIn }) => {
   const [username, setUsername] = useState('');

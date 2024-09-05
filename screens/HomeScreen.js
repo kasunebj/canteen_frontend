@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Modal, Button } from 'react-native';
-import { addItem } from './CartSlice';
+import { addItem } from '../redux/CartSlice';
 import { useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchItems } from '../services/ItemsService'; // Import the service
 
 const foodItems = [
   {
@@ -93,15 +93,8 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.1.100:8080/items');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const id = await AsyncStorage.getItem('userId');
-
-        alert(id);
-        const json = await response.json();
-        setItemList(json);
+        const items = await fetchItems();
+        setItemList(items);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }

@@ -1,52 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchCompletedOrders } from '../services/OrderService'; // Import the API service
 
 const HistoryScreen = () => {
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    const fetchHistory = async () => {
+    const loadHistory = async () => {
       try {
-        // Retrieve the user ID from AsyncStorage
-        const userId = await AsyncStorage.getItem('userId');
-
-        if (!userId) {
-          Alert.alert('Error', 'User not logged in.');
-          return;
-        }
-
-        // Make the API request to fetch the completed orders
-        const response = await fetch('http://192.168.1.100:8080/api/products/completed', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'userId': userId, // Pass userId in the request header
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setHistoryData(data); // Update state with the fetched data
-        } else {
-          Alert.alert('Error', 'Failed to fetch order history');
-        }
+        const data = await fetchCompletedOrders(); // Call the service function
+        setHistoryData(data);
       } catch (error) {
-        console.error('Error fetching history:', error);
-        Alert.alert('Error', 'Unable to connect to the server.');
+        Alert.alert('Error', 'Failed to fetch order history');
       } finally {
-        setLoading(false); // Stop loading once the request is complete
+        setLoading(false);
       }
     };
 
-    fetchHistory();
+    loadHistory();
   }, []);
 
   const renderHistoryItem = ({ item }) => (
     <View style={styles.historyItem}>
       <Text style={styles.itemName}>Order ID: {item.id}</Text>
-      <Text style={styles.itemPrice}>Total: ${item.totalPrice}</Text>
+      <Text style={styles.itemPrice}>Total: Rs.{item.totalPrice}</Text>
       <Text style={styles.itemDate}>Date: {new Date(item.createdAt).toLocaleDateString()}</Text>
     </View>
   );

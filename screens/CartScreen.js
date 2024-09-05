@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, addItem, deleteItem, clearCart } from './CartSlice';
+import { removeItem, addItem, deleteItem, clearCart } from '../redux/CartSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 // import Toast from 'react-native-toast-message';
