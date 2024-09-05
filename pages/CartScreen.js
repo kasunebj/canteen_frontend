@@ -5,6 +5,7 @@ import { removeItem, addItem, deleteItem, clearCart } from './CartSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 // import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CartScreen() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -41,10 +42,12 @@ export default function CartScreen() {
     };
 
     try {
+      const id = await AsyncStorage.getItem('userId');
       const response = await fetch('http://192.168.1.100:8080/api/products', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'userId': id
         },
         body: JSON.stringify(orderRequest)
       });
