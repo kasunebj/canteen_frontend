@@ -5,7 +5,7 @@ import { removeItem, addItem, deleteItem, clearCart } from '../redux/CartSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 // import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addOrder } from '../services/OrderService';
 
 export default function CartScreen() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -33,25 +33,11 @@ export default function CartScreen() {
   };
 
   const handleAddOrder = async () => {
-    const orderRequest = {
-      items: cartItems.map(item => ({
-        itemId: item.id,
-        quantity: item.quantity
-      })),
-      totalPrice: calculateTotalPrice()
-    };
+   
 
     try {
-      const id = await AsyncStorage.getItem('userId');
-      const response = await fetch('http://192.168.1.100:8080/api/products', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'userId': id
-        },
-        body: JSON.stringify(orderRequest)
-      });
 
+      const response = await addOrder(cartItems, calculateTotalPrice);
       if (response.ok) {
         // Order successfully placed
         console.log('Order placed successfully');
@@ -71,7 +57,7 @@ export default function CartScreen() {
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Text>{item.name}</Text>
+      <Text style={styles.itemName}>{item.name}</Text>
       <View style={styles.quantityContainer}>
         <TouchableOpacity onPress={() => handleDecreaseQuantity(item.id)}>
           <Icon name="remove-circle-outline" size={30} color="#000" />
@@ -96,14 +82,14 @@ export default function CartScreen() {
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
           />
-          <Text>Total Price: ${calculateTotalPrice().toFixed(2)}</Text>
+          <Text style={styles.totalPrice}>Total Price: Rs.{calculateTotalPrice().toFixed(2)}</Text>
           <View style={styles.buttonContainer}>
             <Button title="Add Order" onPress={handleAddOrder} />
             <Button title="Clear Cart" onPress={handleClearCart} color="#ff0000" />
           </View>
         </>
       ) : (
-        <Text>Your cart is empty</Text>
+        <Text style={styles.emptyText}>Your cart is empty</Text>
       )}
       {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
     </View>
@@ -114,15 +100,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#FFF5EE', // Background color for the screen
   },
   itemContainer: {
     marginVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#FF4500', // Color of the bottom border
     paddingBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  itemName: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   quantityContainer: {
     flexDirection: 'row',
@@ -132,9 +123,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     fontSize: 18,
   },
+  totalPrice: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 20,
+  },
   buttonContainer: {
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  emptyText: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });

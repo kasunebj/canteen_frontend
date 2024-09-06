@@ -11,7 +11,9 @@ const HistoryScreen = () => {
     const loadHistory = async () => {
       try {
         const data = await fetchCompletedOrders(); // Call the service function
-        setHistoryData(data);
+        if (data.length !== 0) {
+          setHistoryData(data);
+        }
       } catch (error) {
         Alert.alert('Error', 'Failed to fetch order history');
       } finally {
@@ -34,15 +36,17 @@ const HistoryScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Purchase History</Text>
       {loading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <FlatList
-          data={historyData}
-          renderItem={renderHistoryItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.historyContainer}
-        />
-      )}
+    <Text style={styles.loadingText}>Loading...</Text>
+  ) : historyData.length === 0 ? ( // Check if the historyData array is empty
+    <Text style={styles.emptyText}>Order history is empty</Text> // Display this message if it's empty
+  ) : (
+    <FlatList
+      data={historyData}
+      renderItem={renderHistoryItem}
+      keyExtractor={(item) => item.id.toString()}
+      contentContainerStyle={styles.historyContainer}
+    />
+  )}
     </View>
   );
 };
@@ -50,20 +54,27 @@ const HistoryScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff', // Seashell color
+    backgroundColor: '#fff', // Background color
     padding: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#000000', // black color
     marginBottom: 16,
     textAlign: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#FF4500', // Theme color
+    textAlign: 'center',
+    marginTop: 20,
   },
   historyContainer: {
     paddingBottom: 16,
   },
   historyItem: {
-    backgroundColor: '#ff8b00', // LightSalmon color
+    backgroundColor: '#FF4500', // Theme color
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
@@ -71,15 +82,23 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff', // Text color for the item name
   },
   itemPrice: {
     fontSize: 16,
-    color: '#333',
+    color: '#fff', // Text color for the item price
   },
   itemDate: {
     fontSize: 14,
-    color: '#888',
+    color: '#fff', // Text color for the item date
     marginTop: 4,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#888',
+    textAlign: 'center',
+    marginTop: 50,
+    fontWeight: '500',
   },
 });
 

@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { fetchItems } from '../services/ItemsService'; // Import the service
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const foodItems = [
   {
@@ -109,6 +110,7 @@ const HomeScreen = ({ navigation, route }) => {
           type: 'success',
           text1: 'Order submitted successfully!',
         });
+        navigation.setParams({ orderSubmitted: false });
       }
     }, [route.params?.orderSubmitted])
   );
@@ -121,10 +123,16 @@ const HomeScreen = ({ navigation, route }) => {
         setModalVisible(true);
       }}
     >
-      <Image source={item.image} style={styles.foodImage} />
+      <Image source={foodItems[item.image].image} style={styles.foodImage} />
       <Text style={styles.foodName}>{item.name}</Text>
-      <Text style={styles.foodPrice}>{item.price}</Text>
-      <Button title="Add to Cart" onPress={() => handleAddToCart(item)} />
+      <Text style={styles.foodPrice}>Rs. {item.price}</Text>
+      {/* <Button style={styles.addToCartButton} title="Add to Cart" onPress={() => handleAddToCart(item)} /> */}
+      <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => handleAddToCart(item)}
+        >
+          <Text style={styles.closeButtonText}>Add To Cart</Text>
+        </TouchableOpacity>
     </TouchableOpacity>
   );
 
@@ -136,14 +144,14 @@ const HomeScreen = ({ navigation, route }) => {
           style={styles.profileButton}
           onPress={() => navigation.navigate('CartScreen')}
         >
-          <Text style={styles.profileButtonText}>Cart</Text>
+          <Icon name="shopping-cart" size={24} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.profileButton}
           onPress={() => navigation.navigate('Profile')}
         >
           <Text style={styles.profileButtonText}>Profile</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={styles.main}>
         <Text style={styles.title}>Today Available</Text>
@@ -156,24 +164,24 @@ const HomeScreen = ({ navigation, route }) => {
         />
       </View>
       <View style={styles.footer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.navButton}
           onPress={() => navigation.navigate('MealDetails')}
         >
           <Text style={styles.navButtonText}>Meal Details</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.navButton}
           onPress={() => navigation.navigate('Dashboard')}
         >
-          <Text style={styles.navButtonText}>Dashboard</Text>
+          <Text style={styles.navButtonText}>OnGoing Orders</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.navButton}
           onPress={() => navigation.navigate('AboutUs')}
         >
           <Text style={styles.navButtonText}>About Us</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <Modal
@@ -186,10 +194,10 @@ const HomeScreen = ({ navigation, route }) => {
           <View style={styles.modalContent}>
             {selectedFood && (
               <>
-                <Image source={selectedFood.image} style={styles.modalImage} />
+                <Image source={foodItems[selectedFood.image].image} style={styles.modalImage} />
                 <Text style={styles.modalFoodName}>{selectedFood.name}</Text>
                 <Text style={styles.modalIngredients}>{selectedFood.description}</Text>
-                <Text style={styles.modalFoodPrice}>{selectedFood.price}</Text>
+                <Text style={styles.modalFoodPrice}>Rs.{selectedFood.price}</Text>
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setModalVisible(false)}
@@ -340,7 +348,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
-  },
+  }
 });
 
 export default HomeScreen;
